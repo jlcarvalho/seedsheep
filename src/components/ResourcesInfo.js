@@ -101,6 +101,6 @@ export default ({ scanners, colonists, systems }) => (
       </IonRow>
     </Grid>
 
-    <hr className="ion-margin"></hr>
+    <hr/>
   </>
 );
