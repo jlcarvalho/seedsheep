@@ -13,7 +13,7 @@ export const ButtonGroup = styled.div`
 `;
 
 export const Card = styled(IonCard)`
-  height: calc(100% - 20px);
+  min-height: calc(100% - 20px);
   display: flex;
   flex-direction: column;
 `;
