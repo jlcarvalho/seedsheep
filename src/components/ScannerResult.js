@@ -3,24 +3,30 @@ import {
   IonChip,
  } from "@ionic/react";
 
-import { getRandomNumberBetween } from "../utils";
+import { getRandomNumberBetween, getColorFromQuality } from "../utils";
 
-export const ScannerResult = ({ label, stat, onVisible }) => {
+export const ScannerResult = ({ label, stat, instant = false, onVisible = () => {} }) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(
-      () => {
-        setVisible(true);
-        onVisible();
-      },
-      getRandomNumberBetween(500, 1000)
-    );
+    const showResult = () => {
+      setVisible(true);
+      onVisible();
+    }
 
-    return () => clearTimeout(timer);
-  }, [onVisible]);
+    if (!instant) {
+      const timer = setTimeout(
+        showResult,
+        getRandomNumberBetween(1000, 2500)
+      );
+  
+      return () => clearTimeout(timer);
+    } else { 
+      showResult();
+    }
+  }, [onVisible, instant]);
 
   return visible
-    ? <IonChip color={stat.color}>{stat.name}</IonChip> 
+    ? <IonChip color={getColorFromQuality(stat.quality)}>{stat.name}</IonChip> 
     : <IonChip color="medium">Escaneando {label}...</IonChip>
 };
