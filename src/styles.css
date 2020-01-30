@@ -1,4 +1,4 @@
-:root {
+:root {  
   --ion-background-color: #000000;
   --ion-background-color-rgb: 0,0,0;
 
@@ -126,4 +126,11 @@ ion-chip:last-child {
 
 hr {
   background:var(--ion-color-step-400);
+  width: calc(100% - 152px);
+  margin: 24px 76px;
+}
+
+ion-card-content hr {
+  width: calc(100% - 120px);
+  margin: 40px 60px;
 }
