@@ -17,12 +17,12 @@ const FinaleText = styled.div`
   }
 `;
 
-export default ({ text, scanners, colonists, systems, currentPlanet, onClick }) => {
+export default ({ text, scanners, colonists, systems, colonizedPlanet, onClick }) => {
   return (
     <Card>
       <IonCardHeader>
         <IonCardTitle>
-          Planeta Terra 2.0
+          Planeta {colonizedPlanet.name}
         </IonCardTitle>
       </IonCardHeader>
 
@@ -30,7 +30,7 @@ export default ({ text, scanners, colonists, systems, currentPlanet, onClick }) 
         <div>
           <ScannerResults
             scanners={scanners}
-            planet={currentPlanet}
+            planet={colonizedPlanet}
             instant
           />
         </div>
@@ -44,7 +44,7 @@ export default ({ text, scanners, colonists, systems, currentPlanet, onClick }) 
         <ScoreTable
           className="ion-margin-bottom"
           scanners={scanners}
-          planet={currentPlanet} 
+          planet={colonizedPlanet} 
           colonists={colonists}
         />
         

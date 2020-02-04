@@ -24,7 +24,6 @@ import { getRandomItem, getRandomNumberBetween } from "./utils";
  *
  * - Criar história do jogo
  * - Remover <ResourcesInfo /> de dentro do <Incident /> e do <IncidentMessage />
- * - Implementar nome aleatório do planeta
  * - Implementar settlementIncident
  * - Implementar nível tecnológico (?)
  * - Implementar nível cultural (?)
@@ -161,8 +160,14 @@ const Game = () => {
   };
 
   const colonize = colonizedPlanet => {
+    const planetNames = Object.values(colonizedPlanet.scanners)
+      .reduce((acc, { planetNames }) => ([...acc, ...planetNames]), []);
+
     setState({
-      colonizedPlanet,
+      colonizedPlanet: {
+        name: getRandomItem(planetNames),
+        ...colonizedPlanet
+      },
       message: Object.keys(colonizedPlanet.scanners)
         .map(key => `<p>${colonizedPlanet.scanners[key].finale(0)}</p>`)
         .join(" "),
@@ -215,7 +220,7 @@ const Game = () => {
 
         {is("finaleMessage") && (
           <FinaleMessage
-            {...pick(state, ["scanners", "colonists", "systems", "currentPlanet"])}
+            {...pick(state, ["scanners", "colonists", "systems", "colonizedPlanet"])}
             text={state.message}
             onClick={() => reset()}
           />
