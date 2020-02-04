@@ -83,16 +83,16 @@ export default {
     }
   ],
 
-  resources: [
+  vegetation: [
     {
-      name: "Rico em metais",
-      planetNames: ["Vale dos metais"],
+      name: "Rico em gramíneas",
+      planetNames: ["Pasto"],
       quality: "good",
       finale: value => `Os metais pi pi pi po po po.`
     }, 
     {
-      name: "Recursos naturais inexistentes",
-      planetNames: ["Brasil pós-Bolsonaro"],
+      name: "Predominantemente desértico",
+      planetNames: ["Saara"],
       quality: "bad",
       finale: value => `Os recursos naturais pi pi pi po po po.`
     }

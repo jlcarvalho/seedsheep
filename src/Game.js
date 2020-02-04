@@ -54,8 +54,8 @@ const initialState = {
       label: "Água",
       health: 100
     },
-    resources: {
-      label: "Recursos",
+    vegetation: {
+      label: "Vegetação",
       health: 100
     }
   },
