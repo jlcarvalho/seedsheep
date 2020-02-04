@@ -7,6 +7,7 @@ import {
  import get from "lodash/get";
  import pick from "lodash/pick";
  import sample from "lodash/sample";
+ import sampleSize from "lodash/sampleSize";
 
 import ResourcesInfo from "./components/ResourcesInfo";
 import Intro from "./components/Intro";
@@ -17,21 +18,20 @@ import FinaleMessage from "./components/FinaleMessage";
 
 import planetStats from "./data/planetStats";
 import randomIncidents from "./data/randomIncidents";
+import surfaceFeatures from "./data/surfaceFeatures";
 
 import { getRandomNumberBetween } from "./utils";
 
 /**
  * TODO
  *
- * - Criar história do jogo
- * - Remover <ResourcesInfo /> de dentro do <Incident /> e do <IncidentMessage />
- * - Implementar features
- * - Implementar settlementIncident
- * - Implementar nível tecnológico (?)
- * - Implementar nível cultural (?)
- * - Implementar share no final do jogo
- * - Implementar continuar jogo
- * - Implementar highscores
+ * - Criar história do jogo (1.0)
+ * - Implementar features (1.0)
+ * - Implementar continuar jogo (1.0)
+ * - Implementar highscores (1.0)
+ * - Implementar share no final do jogo (2.0)
+ * - Implementar settlementIncident (2.0)
+ * - Remover <ResourcesInfo /> de dentro do <Incident /> e do <IncidentMessage /> (2.0)
  */
 
 const initialState = {
@@ -114,7 +114,7 @@ const Game = () => {
             scanners[key] = sample(planetStats[key]);
             return scanners;
           }, {}),
-          features: []
+          features: sampleSize(surfaceFeatures, getRandomNumberBetween(1, 3))
         },
         planetsVisited: state.planetsVisited + 1,
         eventType: "planet"
