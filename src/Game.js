@@ -6,6 +6,7 @@ import {
  } from "@ionic/react";
  import get from "lodash/get";
  import pick from "lodash/pick";
+ import sample from "lodash/sample";
 
 import ResourcesInfo from "./components/ResourcesInfo";
 import Intro from "./components/Intro";
@@ -17,13 +18,14 @@ import FinaleMessage from "./components/FinaleMessage";
 import planetStats from "./data/planetStats";
 import randomIncidents from "./data/randomIncidents";
 
-import { getRandomItem, getRandomNumberBetween } from "./utils";
+import { getRandomNumberBetween } from "./utils";
 
 /**
  * TODO
  *
  * - Criar história do jogo
  * - Remover <ResourcesInfo /> de dentro do <Incident /> e do <IncidentMessage />
+ * - Implementar features
  * - Implementar settlementIncident
  * - Implementar nível tecnológico (?)
  * - Implementar nível cultural (?)
@@ -109,7 +111,7 @@ const Game = () => {
       setState({
         currentPlanet: {
           scanners: Object.entries(initialState.scanners).reduce((scanners, [key]) => {
-            scanners[key] = getRandomItem(planetStats[key]);
+            scanners[key] = sample(planetStats[key]);
             return scanners;
           }, {}),
           features: []
@@ -121,7 +123,7 @@ const Game = () => {
   };
 
   const randomizeIncident = () => {
-    const currentEvent = getRandomItem(
+    const currentEvent = sample(
       randomIncidents.filter(({ choices }) =>
         choices.every(({ target }) => get(state, target).health > 0)
       )
@@ -165,7 +167,7 @@ const Game = () => {
 
     setState({
       colonizedPlanet: {
-        name: getRandomItem(planetNames),
+        name: sample(planetNames),
         ...colonizedPlanet
       },
       message: Object.keys(colonizedPlanet.scanners)
