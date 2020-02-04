@@ -17,7 +17,7 @@ export const ScannerResult = ({ label, stat, instant = false, onVisible = () => 
     if (!instant) {
       const timer = setTimeout(
         showResult,
-        getRandomNumberBetween(1000, 2500)
+        getRandomNumberBetween(500, 1500)
       );
   
       return () => clearTimeout(timer);
