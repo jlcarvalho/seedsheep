@@ -26,9 +26,10 @@ import { getRandomNumberBetween } from "./utils";
  * TODO
  *
  * - Criar história do jogo (1.0)
- * - Implementar features (1.0)
+ * - Refatorar <FinaleMessage /> (1.0)
  * - Implementar continuar jogo (1.0)
  * - Implementar highscores (1.0)
+ * - Adicionar trilha sonora e efeitos de audio (1.0)
  * - Implementar share no final do jogo (2.0)
  * - Implementar settlementIncident (2.0)
  * - Remover <ResourcesInfo /> de dentro do <Incident /> e do <IncidentMessage /> (2.0)
@@ -170,8 +171,11 @@ const Game = () => {
         name: sample(planetNames),
         ...colonizedPlanet
       },
-      message: Object.keys(colonizedPlanet.scanners)
-        .map(key => `<p>${colonizedPlanet.scanners[key].finale(0)}</p>`)
+      message: [
+        ...Object.values(colonizedPlanet.scanners),
+        ...Object.values(colonizedPlanet.features)
+      ]
+        .map(resource => `<p>${resource.finale(0)}</p>`)
         .join(" "),
       eventType: "finaleMessage"
     });
