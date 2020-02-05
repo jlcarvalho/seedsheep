@@ -34,6 +34,13 @@ export default ({ scanners, planet, colonists, ...props }) => {
     total += value;
   });
 
+  planet.features.forEach(({ name, quality }) => {
+    const value = getScoreFromQuality(quality);
+
+    scores.push({ key: name, label: name, value });
+    total += value;
+  });
+
   return (
     <CustomTable {...props}>
       <thead>
