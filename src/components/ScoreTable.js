@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
-import { getScoreFromQuality } from "../utils";
+import { getScoreFromQuality } from '../utils';
 
 const CustomTable = styled.table`
   font-size: 16px;
@@ -23,7 +23,9 @@ const CustomTable = styled.table`
   }
 `;
 
-export default ({ scanners, planet, colonists, ...props }) => {
+export default ({
+  scanners, planet, colonists, className,
+}) => {
   let total = colonists.health;
   const scores = [];
 
@@ -42,7 +44,7 @@ export default ({ scanners, planet, colonists, ...props }) => {
   });
 
   return (
-    <CustomTable {...props}>
+    <CustomTable className={className}>
       <thead>
         <tr>
           <th colSpan={2}>Score</th>
@@ -54,7 +56,7 @@ export default ({ scanners, planet, colonists, ...props }) => {
           <td>{colonists.health}</td>
         </tr>
         {
-          scores.map(({ key, label, value }) => (  
+          scores.map(({ key, label, value }) => (
             <tr key={key}>
               <td>{label}:</td>
               <td>{value}</td>
@@ -69,5 +71,5 @@ export default ({ scanners, planet, colonists, ...props }) => {
         </tr>
       </tfoot>
     </CustomTable>
-  )
+  );
 };

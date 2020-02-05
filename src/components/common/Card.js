@@ -1,8 +1,5 @@
-import styled from "styled-components";
-import {
-  IonCard,
-  IonCardContent,
- } from "@ionic/react";
+import styled from 'styled-components';
+import { IonCard, IonCardContent } from '@ionic/react';
 
 export const ButtonGroup = styled.div`
   margin-top: 10px;

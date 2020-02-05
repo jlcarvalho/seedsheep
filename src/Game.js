@@ -1,91 +1,92 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 import { withRouter, useParams } from 'react-router-dom';
 import {
   IonContent,
-  IonPage 
-} from "@ionic/react";
-import get from "lodash/get";
-import pick from "lodash/pick";
-import sample from "lodash/sample";
-import sampleSize from "lodash/sampleSize";
-import { useLocalStorage, deleteFromStorage  } from '@rehooks/local-storage';
+  IonPage,
+} from '@ionic/react';
+import get from 'lodash/get';
+import sample from 'lodash/sample';
+import sampleSize from 'lodash/sampleSize';
+import { useLocalStorage, deleteFromStorage } from '@rehooks/local-storage';
 
-import ResourcesInfo from "./components/ResourcesInfo";
-import Intro from "./components/Intro";
-import PlanetFound from "./components/PlanetFound";
-import Incident from "./components/Incident";
-import IncidentMessage from "./components/IncidentMessage";
-import FinaleMessage from "./components/FinaleMessage";
+import ResourcesInfo from './components/ResourcesInfo';
+import Intro from './components/Intro';
+import PlanetFound from './components/PlanetFound';
+import Incident from './components/Incident';
+import IncidentMessage from './components/IncidentMessage';
+import FinaleMessage from './components/FinaleMessage';
 
-import planetStats from "./data/planetStats";
-import randomIncidents from "./data/randomIncidents";
-import surfaceFeatures from "./data/surfaceFeatures";
+import planetStats from './data/planetStats';
+import randomIncidents from './data/randomIncidents';
+import surfaceFeatures from './data/surfaceFeatures';
 
-import { getRandomNumberBetween } from "./utils";
+import { getRandomNumberBetween } from './utils';
 
 /**
  * TODO
  *
  * - Criar história do jogo (1.0)
  * - Criar README.md (1.0)
- * - Considerar o `systems` no <FinaleMessage /> (1.0) 
+ * - Adicionar Eslint + Prettier (1.0)
+ * - Considerar o `systems` no <FinaleMessage /> (1.0)
  * - Refatorar <FinaleMessage /> e <Game /> (1.0)
- * - Implementar highscores (1.0)
  * - Adicionar trilha sonora e efeitos de audio (1.0)
- * 
+ *
+ * - Implementar highscores (2.0)
  * - Implementar i18n (2.0)
  * - Implementar share no final do jogo (2.0)
  * - Implementar settlementIncident (2.0)
+ * - Testar aplicação com jest (2.0)
  * - Remover <ResourcesInfo /> de dentro do <Incident /> e do <IncidentMessage /> (2.0)
  */
 
 const initialState = {
   colonists: {
-    label: "Colonizadores",
-    health: 1000
+    label: 'Colonizadores',
+    health: 1000,
   },
   scanners: {
     atmosphere: {
-      label: "Atmosfera",
-      health: 100
+      label: 'Atmosfera',
+      health: 100,
     },
     gravity: {
-      label: "Gravidade",
-      health: 100
+      label: 'Gravidade',
+      health: 100,
     },
     temperature: {
-      label: "Temperatura",
-      health: 100
+      label: 'Temperatura',
+      health: 100,
     },
     water: {
-      label: "Água",
-      health: 100
+      label: 'Água',
+      health: 100,
     },
     vegetation: {
-      label: "Vegetação",
-      health: 100
-    }
+      label: 'Vegetação',
+      health: 100,
+    },
   },
   systems: {
     construction: {
-      label: "Construção", // Ovelhas constroem?
-      health: 100
+      label: 'Construção', // Ovelhas constroem?
+      health: 100,
     },
     cooling: {
-      label: "Refrigeração",
-      health: 100
+      label: 'Refrigeração',
+      health: 100,
     },
     landing: {
-      label: "Aterrissagem",
-      health: 100
+      label: 'Aterrissagem',
+      health: 100,
     },
     oxygen: {
-      label: "Oxigênio",
-      health: 100
-    }
+      label: 'Oxigênio',
+      health: 100,
+    },
   },
   planetsVisited: 0,
-  eventType: "intro",
+  eventType: 'intro',
 };
 
 const Game = () => {
@@ -99,104 +100,108 @@ const Game = () => {
 
   const [state, setState] = useLocalStorage(
     'seedsheep',
-    { ...initialState }
+    { ...initialState },
   );
 
   const randomizePlanet = () => {
     const scannersValues = Object.values(state.scanners);
 
     if (
-      scannersValues.filter(({ health }) => health === 0).length > scannersValues.length / 2 || // Metade + 1 dos scanners falharam
-      Object.values(state.systems).some(({ health }) => health === 0)                           // Algum dos sistemas críticos da nave falhou
+      scannersValues.filter(({ health }) => health === 0).length > scannersValues.length / 2
+      || Object.values(state.systems).some(({ health }) => health === 0)
     ) {
       // Game Over
       setState({
         ...state,
-        eventType: "finaleMessage",
-        message: "A nave está muito danificada para continuar sua busca, o rebanho se perdeu para sempre..."
+        eventType: 'finaleMessage',
+        message: 'A nave está muito danificada para continuar sua busca, o rebanho se perdeu para sempre...',
       });
     } else if (state.colonists.health === 0) {
       // Game Over
       setState({
         ...state,
-        eventType: "finaleMessage",
-        message: "Todos os colonizadores morreram..."
+        eventType: 'finaleMessage',
+        message: 'Todos os colonizadores morreram...',
       });
     } else {
       setState({
         ...state,
         currentPlanet: {
-          scanners: Object.entries(initialState.scanners).reduce((scanners, [key]) => {
+          scanners: Object.entries(initialState.scanners).reduce((acc, [key]) => {
+            const scanners = acc;
             scanners[key] = sample(planetStats[key]);
             return scanners;
           }, {}),
-          features: sampleSize(surfaceFeatures, getRandomNumberBetween(1, 3))
+          features: sampleSize(surfaceFeatures, getRandomNumberBetween(1, 3)),
         },
         planetsVisited: state.planetsVisited + 1,
-        eventType: "planet"
+        eventType: 'planet',
       });
     }
   };
 
   const randomizeIncident = () => {
     const currentEvent = sample(
-      randomIncidents.filter(({ choices }) =>
-        choices.every(({ target }) => get(state, target).health > 0)
-      )
+      randomIncidents
+        .filter(({ choices }) => choices.every(({ target }) => get(state, target).health > 0)),
     );
 
     setState({
       ...state,
       currentEvent,
-      eventType: "incident"
+      eventType: 'incident',
     });
   };
 
-  const selectChoice = choice => {
+  const selectChoice = (choice) => {
     const resource = get(state, choice.target);
     const damage = getRandomNumberBetween(choice.minDamage, choice.maxDamage);
     const valueAfterDamage = resource.health - damage;
     const health = valueAfterDamage > 0 ? valueAfterDamage : 0;
 
-    const [ type, target ] = choice.target.split(".");
+    const [type, target] = choice.target.split('.');
 
-    if (type === "colonists") {
+    if (type === 'colonists') {
       setState({
         ...state,
-        message: choice.message({ damage, health, label: resource.label, type }),
-        eventType: "incidentMessage",
-        colonists: { ...state.colonists, health }
+        message: choice.message({
+          damage, health, label: resource.label, type,
+        }),
+        eventType: 'incidentMessage',
+        colonists: { ...state.colonists, health },
       });
     } else {
       setState({
         ...state,
-        message: choice.message({ damage, health, label: resource.label, type }),
-        eventType: "incidentMessage",
+        message: choice.message({
+          damage, health, label: resource.label, type,
+        }),
+        eventType: 'incidentMessage',
         [type]: {
           ...state[type],
-          [target]: { ...resource, health }
-        }
+          [target]: { ...resource, health },
+        },
       });
     }
   };
 
-  const colonize = colonizedPlanet => {
-    const planetNames = Object.values(colonizedPlanet.scanners)
+  const colonize = (colonizedPlanet) => {
+    const aggregatedPlanetNames = Object.values(colonizedPlanet.scanners)
       .reduce((acc, { planetNames }) => ([...acc, ...planetNames]), []);
 
     setState({
       ...state,
       colonizedPlanet: {
-        name: sample(planetNames),
-        ...colonizedPlanet
+        name: sample(aggregatedPlanetNames),
+        ...colonizedPlanet,
       },
       message: [
         ...Object.values(colonizedPlanet.scanners),
-        ...Object.values(colonizedPlanet.features)
+        ...Object.values(colonizedPlanet.features),
       ]
-        .map(resource => `<p>${resource.finale(0)}</p>`)
-        .join(" "),
-      eventType: "finaleMessage"
+        .map((resource) => `<p>${resource.finale(0)}</p>`)
+        .join(' '),
+      eventType: 'finaleMessage',
     });
   };
 
@@ -204,48 +209,55 @@ const Game = () => {
     setState(initialState);
   };
 
-  const is = eventType => state.eventType === eventType;
+  const is = (eventType) => state.eventType === eventType;
 
   return (
     <IonPage>
       <IonContent>
-        {is("intro") && <Intro onClick={() => randomizePlanet()} />}
+        {is('intro') && <Intro onClick={() => randomizePlanet()} />}
 
-        {is("planet") && (
+        {is('planet') && (
           <PlanetFound
             scanners={state.scanners}
             planet={state.currentPlanet}
             onMoveOn={() => randomizeIncident()}
-            onColonize={planet => colonize(planet)}
+            onColonize={(planet) => colonize(planet)}
           />
         )}
 
-        {is("incident") && (
+        {is('incident') && (
           <Incident
             text={state.currentEvent.description}
             choices={state.currentEvent.choices}
-            onSelect={choice => selectChoice(choice)}
+            onSelect={(choice) => selectChoice(choice)}
           >
             <ResourcesInfo
-              {...pick(state, ["scanners", "colonists", "systems"])}
+              scanners={state.scanners}
+              colonists={state.colonists}
+              systems={state.systems}
             />
           </Incident>
         )}
 
-        {is("incidentMessage") && (
+        {is('incidentMessage') && (
           <IncidentMessage
             text={state.message}
             onClick={() => randomizePlanet()}
           >
             <ResourcesInfo
-              {...pick(state, ["scanners", "colonists", "systems"])}
+              scanners={state.scanners}
+              colonists={state.colonists}
+              systems={state.systems}
             />
           </IncidentMessage>
         )}
 
-        {is("finaleMessage") && (
+        {is('finaleMessage') && (
           <FinaleMessage
-            {...pick(state, ["scanners", "colonists", "systems", "colonizedPlanet"])}
+            scanners={state.scanners}
+            colonists={state.colonists}
+            systems={state.systems}
+            colonizedPlanet={state.colonizedPlanet}
             text={state.message}
             onClick={() => reset()}
           />
@@ -253,6 +265,6 @@ const Game = () => {
       </IonContent>
     </IonPage>
   );
-}
+};
 
 export default withRouter(Game);

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupConfig } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
@@ -10,14 +10,14 @@ import '@ionic/react/css/structure.css';
 import '@ionic/react/css/typography.css';
 import '@ionic/react/css/padding.css';
 
-import "./styles.css";
+import './styles.css';
 
-import Home from "./Home";
-import Game from "./Game";
-import Credits from "./Credits";
+import Home from './Home';
+import Game from './Game';
+import Credits from './Credits';
 
 setupConfig({
-  mode: 'md'
+  mode: 'md',
 });
 
 export default () => (
@@ -30,4 +30,4 @@ export default () => (
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
-)
+);

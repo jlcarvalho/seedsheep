@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 import {
   IonButton,
   IonCardHeader,
   IonCardTitle,
- } from "@ionic/react";
+} from '@ionic/react';
 
- import { ButtonGroup, Card, CardContent } from "./common/Card";
+import { ButtonGroup, Card, CardContent } from './common/Card';
 
 export default ({ onClick }) => (
   <Card>

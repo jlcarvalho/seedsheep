@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 import {
   IonGrid,
   IonRow,
@@ -8,7 +8,7 @@ import {
   IonCardTitle,
   IonProgressBar,
   IonText,
-} from "@ionic/react";
+} from '@ionic/react';
 
 const ProgressBar = styled(IonProgressBar)`
   max-width: 40%;
@@ -39,10 +39,10 @@ const Title = styled(IonText)`
 `;
 
 const getProgressColor = (value) => {
-  if (value > 80) return "green";
-  if (value > 50) return "orange";
-  return "red";
-}
+  if (value > 80) return 'green';
+  if (value > 50) return 'orange';
+  return 'red';
+};
 
 const Resources = ({ title, data }) => (
   <>
@@ -52,7 +52,7 @@ const Resources = ({ title, data }) => (
       </strong>
     </Title>
     {
-      Object.values(data).map(resource => {
+      Object.values(data).map((resource) => {
         const currentColor = getProgressColor(resource.health);
         return (
           <div key={resource.label} className="resource-wrapper">
@@ -62,9 +62,9 @@ const Resources = ({ title, data }) => (
             <ProgressBar
               value={resource.health / 100}
               color={currentColor}
-            ></ProgressBar>
+            />
           </div>
-        )
+        );
       })
     }
   </>
@@ -86,8 +86,8 @@ export default ({ scanners, colonists, systems }) => (
             {colonists.health}
           </Title>
         </Col>
-        
-        <Col></Col>
+
+        <Col />
       </IonRow>
 
       <IonRow>
@@ -101,6 +101,6 @@ export default ({ scanners, colonists, systems }) => (
       </IonRow>
     </Grid>
 
-    <hr/>
+    <hr />
   </>
 );
