@@ -1,6 +1,7 @@
 module.exports = {
   root: true,
   extends: ["airbnb"],
+  plugins: ["jest"],
   rules: {
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/prop-types": 0,
@@ -8,5 +9,8 @@ module.exports = {
   },
   globals: {
     document: "readonly"
+  },
+  env: {
+    "jest/globals": true
   }
 }; 
