@@ -27,7 +27,6 @@ import { getRandomNumberBetween } from './utils';
  *
  * - Criar história do jogo (1.0)
  * - Criar README.md (1.0)
- * - Adicionar Eslint + Prettier (1.0)
  * - Considerar o `systems` no <FinaleMessage /> (1.0)
  * - Refatorar <FinaleMessage /> e <Game /> (1.0)
  * - Adicionar trilha sonora e efeitos de audio (1.0)
