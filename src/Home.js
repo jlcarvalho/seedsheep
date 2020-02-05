@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useLocalStorage } from '@rehooks/local-storage';
 
 import {
   IonButton,
@@ -24,23 +25,30 @@ const Title = styled(IonCardTitle)`
   text-align: center;
 `; 
 
-export default () => (
-  <IonPage>
-    <IonContent>
-      <Card>
-        <IonCardHeader>
-          <Title>Seedsheep</Title>
-        </IonCardHeader>
+export default () => {
+  const [lastGame] = useLocalStorage('seedsheep');
 
-        <IonCardContent>
-          <IonButton expand="block" routerLink="/game">
-            Iniciar jogo
-          </IonButton>
-          <IonButton expand="block" fill="clear" color="light" routerLink="/credits">
-            Créditos
-          </IonButton>
-        </IonCardContent>
-      </Card>
-    </IonContent>
-  </IonPage>
-);
+  return (
+    <IonPage>
+      <IonContent>
+        <Card>
+          <IonCardHeader>
+            <Title>Seedsheep</Title>
+          </IonCardHeader>
+
+          <IonCardContent>
+            <IonButton expand="block" routerLink="/game/new">
+              Iniciar jogo
+            </IonButton>
+            <IonButton expand="block" fill="clear" color="light" routerLink="/game/continue" disabled={!lastGame}>
+              Continuar jogo
+            </IonButton>
+            <IonButton expand="block" fill="clear" color="light" routerLink="/credits">
+              Créditos
+            </IonButton>
+          </IonCardContent>
+        </Card>
+      </IonContent>
+    </IonPage>
+  )
+};

@@ -1,13 +1,14 @@
-import React, { useReducer } from "react";
-import { withRouter } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { withRouter, useParams } from 'react-router-dom';
 import {
   IonContent,
   IonPage 
- } from "@ionic/react";
- import get from "lodash/get";
- import pick from "lodash/pick";
- import sample from "lodash/sample";
- import sampleSize from "lodash/sampleSize";
+} from "@ionic/react";
+import get from "lodash/get";
+import pick from "lodash/pick";
+import sample from "lodash/sample";
+import sampleSize from "lodash/sampleSize";
+import { useLocalStorage, deleteFromStorage  } from '@rehooks/local-storage';
 
 import ResourcesInfo from "./components/ResourcesInfo";
 import Intro from "./components/Intro";
@@ -26,10 +27,13 @@ import { getRandomNumberBetween } from "./utils";
  * TODO
  *
  * - Criar história do jogo (1.0)
- * - Refatorar <FinaleMessage /> (1.0)
- * - Implementar continuar jogo (1.0)
+ * - Criar README.md (1.0)
+ * - Considerar o `systems` no <FinaleMessage /> (1.0) 
+ * - Refatorar <FinaleMessage /> e <Game /> (1.0)
  * - Implementar highscores (1.0)
  * - Adicionar trilha sonora e efeitos de audio (1.0)
+ * 
+ * - Implementar i18n (2.0)
  * - Implementar share no final do jogo (2.0)
  * - Implementar settlementIncident (2.0)
  * - Remover <ResourcesInfo /> de dentro do <Incident /> e do <IncidentMessage /> (2.0)
@@ -64,7 +68,7 @@ const initialState = {
   },
   systems: {
     construction: {
-      label: "Construção",
+      label: "Construção", // Ovelhas constroem?
       health: 100
     },
     cooling: {
@@ -85,8 +89,16 @@ const initialState = {
 };
 
 const Game = () => {
-  const [state, setState] = useReducer(
-    (state, newState) => ({ ...state, ...newState }),
+  const { newGame } = useParams();
+
+  useEffect(() => {
+    if (newGame === 'new') {
+      deleteFromStorage('seedsheep');
+    }
+  }, [newGame]);
+
+  const [state, setState] = useLocalStorage(
+    'seedsheep',
     { ...initialState }
   );
 
@@ -99,17 +111,20 @@ const Game = () => {
     ) {
       // Game Over
       setState({
+        ...state,
         eventType: "finaleMessage",
         message: "A nave está muito danificada para continuar sua busca, o rebanho se perdeu para sempre..."
       });
     } else if (state.colonists.health === 0) {
       // Game Over
       setState({
+        ...state,
         eventType: "finaleMessage",
         message: "Todos os colonizadores morreram..."
       });
     } else {
       setState({
+        ...state,
         currentPlanet: {
           scanners: Object.entries(initialState.scanners).reduce((scanners, [key]) => {
             scanners[key] = sample(planetStats[key]);
@@ -131,6 +146,7 @@ const Game = () => {
     );
 
     setState({
+      ...state,
       currentEvent,
       eventType: "incident"
     });
@@ -146,12 +162,14 @@ const Game = () => {
 
     if (type === "colonists") {
       setState({
+        ...state,
         message: choice.message({ damage, health, label: resource.label, type }),
         eventType: "incidentMessage",
         colonists: { ...state.colonists, health }
       });
     } else {
       setState({
+        ...state,
         message: choice.message({ damage, health, label: resource.label, type }),
         eventType: "incidentMessage",
         [type]: {
@@ -167,6 +185,7 @@ const Game = () => {
       .reduce((acc, { planetNames }) => ([...acc, ...planetNames]), []);
 
     setState({
+      ...state,
       colonizedPlanet: {
         name: sample(planetNames),
         ...colonizedPlanet

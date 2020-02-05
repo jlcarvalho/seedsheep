@@ -25,7 +25,7 @@ export default () => (
     <IonReactRouter>
       <IonRouterOutlet>
         <Route exact path="/" component={Home} />
-        <Route path="/game" component={Game} />
+        <Route path="/game/:newGame" component={Game} />
         <Route path="/credits" component={Credits} />
       </IonRouterOutlet>
     </IonReactRouter>
