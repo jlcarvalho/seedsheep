@@ -3,14 +3,17 @@ import styled from 'styled-components';
 import {
   IonCardHeader,
   IonCardTitle,
+  IonChip,
   IonText,
 } from '@ionic/react';
 import isEqual from 'lodash/isEqual';
 
 import { Card, CardContent } from './common/Card';
 import { Button, ButtonGroup } from './common/Button';
+import { LazyContent } from './common/Async';
 import ScannerResults from './ScannerResults';
-import FeaturesResults from './FeaturesResults';
+
+import { getRandomNumberBetween, getColorFromQuality } from '../utils';
 
 const SurfaceFeatureTitle = styled(IonText)`
   margin: 16px 0;
@@ -65,11 +68,22 @@ export default class PlanetFound extends Component {
             Recursos da superfície
           </SurfaceFeatureTitle>
           <div>
-            <FeaturesResults
-              features={planet.features}
-              label="Recursos"
+            <LazyContent
+              ms={getRandomNumberBetween(1000, 2000)}
+              fallback={<IonChip color="medium">Escaneando recursos...</IonChip>}
               onVisible={() => this.setState((state) => ({ ...state, features: true }))}
-            />
+            >
+              {
+                planet.features.map((feature) => (
+                  <IonChip
+                    key={feature.name}
+                    color={getColorFromQuality(feature.quality)}
+                  >
+                    {feature.name}
+                  </IonChip>
+                ))
+              }
+            </LazyContent>
           </div>
           <ButtonGroup>
             <Button disabled={!buttonsEnabled} expand="block" handleClick={() => onMoveOn()}>Seguir em frente</Button>

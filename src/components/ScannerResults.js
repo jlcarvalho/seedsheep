@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import {
+  IonChip,
+} from '@ionic/react';
 
-import ScannerResult from './ScannerResult';
-import { getRandomNumberBetween } from '../utils';
+import { getRandomNumberBetween, getColorFromQuality } from '../utils';
+import { LazyContent } from './common/Async';
 
 const getStat = ({
   scanner, health, value, instant,
@@ -20,16 +23,20 @@ export default class ScannerResults extends Component {
       scanners, planet, instant = false, onVisible = () => {},
     } = this.props;
 
-    return Object.entries(scanners).map(([key, { label, health }]) => (
-      <ScannerResult
-        key={key}
-        label={label}
-        stat={getStat({
-          value: planet.scanners[key], health, scanner: label, instant,
-        })}
-        instant={instant}
-        onVisible={() => onVisible(key)}
-      />
-    ));
+    return Object.entries(scanners).map(([key, { label, health }]) => {
+      const stat = getStat({
+        value: planet.scanners[key], health, scanner: label, instant,
+      });
+      return (
+        <LazyContent
+          key={key}
+          ms={instant ? 0 : getRandomNumberBetween(1000, 2000)}
+          fallback={<IonChip color="medium">Escaneando {label}...</IonChip>}
+          onVisible={() => onVisible(key)}
+        >
+          <IonChip color={getColorFromQuality(stat.quality)}>{stat.name}</IonChip>
+        </LazyContent>
+      );
+    });
   }
 }

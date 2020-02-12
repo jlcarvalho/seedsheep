@@ -1,13 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { Component } from 'react';
+import isEqual from 'lodash/isEqual';
 
 export const TIME_BETWEEN_CONTENT = 1500;
 
-export const LazyContent = ({ children, fallback = null, ms = 0 }) => {
-  const [visible, setVisible] = useState(false);
+export class LazyContent extends Component {
+  constructor(props) {
+    super(props);
 
-  useEffect(() => {
+    this.state = {
+      visible: false,
+    };
+  }
+
+  componentDidMount() {
+    const { onVisible, ms } = this.props;
+
     const showResult = () => {
-      setVisible(true);
+      this.setState({ visible: true });
+
+      if (onVisible) onVisible();
     };
 
     const timer = setTimeout(
@@ -16,9 +27,18 @@ export const LazyContent = ({ children, fallback = null, ms = 0 }) => {
     );
 
     return () => clearTimeout(timer);
-  }, []);
+  }
 
-  return <>{visible ? children : fallback}</>;
-};
+  shouldComponentUpdate(nextProps, nextState) {
+    return !isEqual(this.state, nextState);
+  }
+
+  render() {
+    const { children, fallback } = this.props;
+    const { visible } = this.state;
+
+    return <>{visible ? children : fallback}</>;
+  }
+}
 
 export default { LazyContent };
