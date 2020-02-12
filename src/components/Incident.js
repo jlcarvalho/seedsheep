@@ -1,32 +1,36 @@
 import React from 'react';
 import {
-  IonButton,
   IonCardHeader,
   IonCardTitle,
 } from '@ionic/react';
 
-import { ButtonGroup, Card, CardContent } from './common/Card';
+import { Card, CardContent } from './common/Card';
+import { Button, ButtonGroup } from './common/Button';
 
 export default ({
-  text, choices, onSelect, children,
-}) => (
-  <Card>
-    {children}
+  currentEvent, onSelect, children,
+}) => {
+  const { description, choices } = currentEvent;
 
-    <IonCardHeader>
-      <IonCardTitle>Perigo</IonCardTitle>
-    </IonCardHeader>
+  return (
+    <Card>
+      {children}
 
-    <CardContent>
-      <p>{text}</p>
+      <IonCardHeader>
+        <IonCardTitle>Perigo</IonCardTitle>
+      </IonCardHeader>
 
-      <ButtonGroup>
-        {choices.map((choice) => (
-          <IonButton expand="block" key={choice.target} onClick={() => onSelect(choice)}>
-            {choice.description}
-          </IonButton>
-        ))}
-      </ButtonGroup>
-    </CardContent>
-  </Card>
-);
+      <CardContent>
+        <p>{description}</p>
+
+        <ButtonGroup>
+          {choices.map((choice) => (
+            <Button expand="block" key={choice.target} handleClick={() => onSelect(choice)}>
+              {choice.description}
+            </Button>
+          ))}
+        </ButtonGroup>
+      </CardContent>
+    </Card>
+  );
+};

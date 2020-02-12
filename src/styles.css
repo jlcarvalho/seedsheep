@@ -38,7 +38,6 @@
   --ion-color-green-contrast-rgb: 0,0,0;
   --ion-color-green-shade: #07e007;
   --ion-color-green-tint: #21ff21;
-
   
   --ion-color-orange: #FFCF00;
   --ion-color-orange-rgb: 255,207,0;
@@ -112,7 +111,7 @@
 }
 
 .card-content-md p {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 ion-chip {

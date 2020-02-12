@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { useLocalStorage } from '@rehooks/local-storage';
 
 import {
-  IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -11,6 +10,8 @@ import {
   IonContent,
   IonPage,
 } from '@ionic/react';
+
+import { Button } from './components/common/Button';
 
 const Card = styled(IonCard)`
   height: calc(100% - 20px);
@@ -37,10 +38,10 @@ export default () => {
           </IonCardHeader>
 
           <IonCardContent>
-            <IonButton expand="block" routerLink="/game/new">
+            <Button expand="block" routerLink="/game/new">
               Iniciar jogo
-            </IonButton>
-            <IonButton
+            </Button>
+            <Button
               expand="block"
               fill="clear"
               color="light"
@@ -48,15 +49,15 @@ export default () => {
               disabled={!lastGame}
             >
               Continuar jogo
-            </IonButton>
-            <IonButton
+            </Button>
+            <Button
               expand="block"
               fill="clear"
               color="light"
               routerLink="/credits"
             >
               Créditos
-            </IonButton>
+            </Button>
           </IonCardContent>
         </Card>
       </IonContent>

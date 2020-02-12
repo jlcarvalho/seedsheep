@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import {
-  IonButton,
   IonCardHeader,
   IonCardTitle,
   IonText,
 } from '@ionic/react';
 import isEqual from 'lodash/isEqual';
 
-import { ButtonGroup, Card, CardContent } from './common/Card';
+import { Card, CardContent } from './common/Card';
+import { Button, ButtonGroup } from './common/Button';
 import ScannerResults from './ScannerResults';
 import FeaturesResults from './FeaturesResults';
 
@@ -72,10 +72,10 @@ export default class PlanetFound extends Component {
             />
           </div>
           <ButtonGroup>
-            <IonButton disabled={!buttonsEnabled} expand="block" onClick={() => onMoveOn()}>Seguir em frente</IonButton>
-            <IonButton disabled={!buttonsEnabled} expand="block" onClick={() => onColonize(planet)}>
+            <Button disabled={!buttonsEnabled} expand="block" handleClick={() => onMoveOn()}>Seguir em frente</Button>
+            <Button disabled={!buttonsEnabled} expand="block" handleClick={() => onColonize(planet)}>
               Estabelecer colônia
-            </IonButton>
+            </Button>
           </ButtonGroup>
         </CardContent>
       </Card>

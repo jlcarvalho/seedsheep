@@ -12,3 +12,16 @@ export const getScoreFromQuality = (quality) => ({
   mediocre: 250,
   good: 500,
 }[quality]);
+
+// TODO: Pensar numa forma melhor de implementar essa função
+export const generateMessage = ({
+  damage, health, label, type, text,
+}) => {
+  if (health === 0) {
+    if (type === 'colonists') {
+      return `Todos os ${label.toLowerCase()} morreram.`;
+    }
+    return `O scanner de ${label.toLowerCase()} parou de funcionar.`;
+  }
+  return text.replace('[[damage]]', damage);
+};

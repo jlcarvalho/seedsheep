@@ -2,12 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 
 import {
-  IonButton,
   IonCardHeader,
   IonCardTitle,
 } from '@ionic/react';
 
-import { ButtonGroup, Card, CardContent } from './common/Card';
+import { Card, CardContent } from './common/Card';
+import { Button, ButtonGroup } from './common/Button';
+import { LazyContent, TIME_BETWEEN_CONTENT } from './common/Async';
 import ScannerResults from './ScannerResults';
 import ScoreTable from './ScoreTable';
 
@@ -18,7 +19,7 @@ const FinaleText = styled.div`
 `;
 
 export default ({
-  text, scanners, colonists, colonizedPlanet, onClick,
+  messages, scanners, colonists, colonizedPlanet, onClick,
 }) => (
   <Card>
     <IonCardHeader>
@@ -38,20 +39,32 @@ export default ({
 
       <hr />
 
-      <FinaleText dangerouslySetInnerHTML={{ __html: text }} />
+      <FinaleText>
+        {
+          messages.map((text, index) => (
+            <LazyContent key={text} ms={TIME_BETWEEN_CONTENT * index}>
+              <p>{text}</p>
+            </LazyContent>
+          ))
+        }
+      </FinaleText>
 
-      <hr />
+      {
+        <LazyContent ms={messages.length * TIME_BETWEEN_CONTENT}>
+          <hr />
 
-      <ScoreTable
-        className="ion-margin-bottom"
-        scanners={scanners}
-        planet={colonizedPlanet}
-        colonists={colonists}
-      />
+          <ScoreTable
+            className="ion-margin-bottom"
+            scanners={scanners}
+            planet={colonizedPlanet}
+            colonists={colonists}
+          />
 
-      <ButtonGroup>
-        <IonButton expand="block" onClick={onClick}>Jogar novamente</IonButton>
-      </ButtonGroup>
+          <ButtonGroup>
+            <Button expand="block" handleClick={onClick}>Jogar novamente</Button>
+          </ButtonGroup>
+        </LazyContent>
+      }
     </CardContent>
   </Card>
 );

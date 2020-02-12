@@ -4,7 +4,7 @@ export default {
       name: 'Atmosfera tóxica',
       planetNames: ['Pequim'],
       quality: 'bad',
-      finale: (value) => `A atmosfera extremamente tóxica do planeta faz com que os colonizadores precisem usar trajes espaciais o tempo todo, mas devido a falhas em alguns trajes ${value} colonizadores morreram durante o processo de colonização.`,
+      finale: () => 'A atmosfera extremamente tóxica do planeta faz com que os colonizadores precisem usar trajes espaciais o tempo todo, mas devido a falhas em alguns trajes 17 colonizadores morreram durante o processo de colonização.',
     },
     {
       name: 'Atmosfera rarefeita',

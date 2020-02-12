@@ -20,16 +20,13 @@ import planetStats from './data/planetStats';
 import randomIncidents from './data/randomIncidents';
 import surfaceFeatures from './data/surfaceFeatures';
 
-import { getRandomNumberBetween } from './utils';
+import { getRandomNumberBetween, generateMessage } from './utils';
 
 /**
  * TODO
  *
  * - Criar história do jogo (1.0)
- * - Criar README.md (1.0)
  * - Considerar o `systems` no <FinaleMessage /> (1.0)
- * - Refatorar <FinaleMessage /> e <Game /> (1.0)
- * - Adicionar trilha sonora e efeitos de audio (1.0)
  *
  * - Implementar highscores (2.0)
  * - Implementar i18n (2.0)
@@ -37,6 +34,7 @@ import { getRandomNumberBetween } from './utils';
  * - Implementar settlementIncident (2.0)
  * - Testar aplicação com jest (2.0)
  * - Remover <ResourcesInfo /> de dentro do <Incident /> e do <IncidentMessage /> (2.0)
+ * - Implementar controles de audio (2.0)
  */
 
 const initialState = {
@@ -86,6 +84,7 @@ const initialState = {
   },
   planetsVisited: 0,
   eventType: 'intro',
+  payload: {},
 };
 
 const Game = () => {
@@ -113,28 +112,34 @@ const Game = () => {
       setState({
         ...state,
         eventType: 'finaleMessage',
-        message: 'A nave está muito danificada para continuar sua busca, o rebanho se perdeu para sempre...',
+        payload: {
+          messages: ['A nave está muito danificada para continuar sua busca, o rebanho se perdeu para sempre...'],
+        },
       });
     } else if (state.colonists.health === 0) {
       // Game Over
       setState({
         ...state,
         eventType: 'finaleMessage',
-        message: 'Todos os colonizadores morreram...',
+        payload: {
+          messages: ['Todas as ovelhas morreram...'],
+        },
       });
     } else {
       setState({
         ...state,
-        currentPlanet: {
-          scanners: Object.entries(initialState.scanners).reduce((acc, [key]) => {
-            const scanners = acc;
-            scanners[key] = sample(planetStats[key]);
-            return scanners;
-          }, {}),
-          features: sampleSize(surfaceFeatures, getRandomNumberBetween(1, 3)),
-        },
         planetsVisited: state.planetsVisited + 1,
         eventType: 'planet',
+        payload: {
+          planet: {
+            scanners: Object.entries(initialState.scanners).reduce((acc, [key]) => {
+              const scanners = acc;
+              scanners[key] = sample(planetStats[key]);
+              return scanners;
+            }, {}),
+            features: sampleSize(surfaceFeatures, getRandomNumberBetween(1, 3)),
+          },
+        },
       });
     }
   };
@@ -147,7 +152,10 @@ const Game = () => {
 
     setState({
       ...state,
-      currentEvent,
+      payload: {
+        choices: state.payload.choices,
+        currentEvent,
+      },
       eventType: 'incident',
     });
   };
@@ -160,25 +168,33 @@ const Game = () => {
 
     const [type, target] = choice.target.split('.');
 
+    const message = generateMessage({
+      text: choice.message,
+      damage,
+      health,
+      label: resource.label,
+      type,
+    });
+
     if (type === 'colonists') {
       setState({
         ...state,
-        message: choice.message({
-          damage, health, label: resource.label, type,
-        }),
         eventType: 'incidentMessage',
         colonists: { ...state.colonists, health },
+        payload: {
+          message,
+        },
       });
     } else {
       setState({
         ...state,
-        message: choice.message({
-          damage, health, label: resource.label, type,
-        }),
         eventType: 'incidentMessage',
         [type]: {
           ...state[type],
           [target]: { ...resource, health },
+        },
+        payload: {
+          message,
         },
       });
     }
@@ -190,17 +206,18 @@ const Game = () => {
 
     setState({
       ...state,
-      colonizedPlanet: {
-        name: sample(aggregatedPlanetNames),
-        ...colonizedPlanet,
-      },
-      message: [
-        ...Object.values(colonizedPlanet.scanners),
-        ...Object.values(colonizedPlanet.features),
-      ]
-        .map((resource) => `<p>${resource.finale(0)}</p>`)
-        .join(' '),
       eventType: 'finaleMessage',
+      payload: {
+        colonizedPlanet: {
+          name: sample(aggregatedPlanetNames),
+          ...colonizedPlanet,
+        },
+        messages: [
+          ...Object.values(colonizedPlanet.scanners),
+          ...Object.values(colonizedPlanet.features),
+        ]
+          .map((resource) => resource.finale()),
+      },
     });
   };
 
@@ -217,8 +234,8 @@ const Game = () => {
 
         {is('planet') && (
           <PlanetFound
+            {...state.payload}
             scanners={state.scanners}
-            planet={state.currentPlanet}
             onMoveOn={() => randomizeIncident()}
             onColonize={(planet) => colonize(planet)}
           />
@@ -226,8 +243,7 @@ const Game = () => {
 
         {is('incident') && (
           <Incident
-            text={state.currentEvent.description}
-            choices={state.currentEvent.choices}
+            {...state.payload}
             onSelect={(choice) => selectChoice(choice)}
           >
             <ResourcesInfo
@@ -240,7 +256,7 @@ const Game = () => {
 
         {is('incidentMessage') && (
           <IncidentMessage
-            text={state.message}
+            {...state.payload}
             onClick={() => randomizePlanet()}
           >
             <ResourcesInfo
@@ -253,11 +269,10 @@ const Game = () => {
 
         {is('finaleMessage') && (
           <FinaleMessage
+            {...state.payload}
             scanners={state.scanners}
             colonists={state.colonists}
             systems={state.systems}
-            colonizedPlanet={state.colonizedPlanet}
-            text={state.message}
             onClick={() => reset()}
           />
         )}

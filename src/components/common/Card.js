@@ -1,13 +1,6 @@
 import styled from 'styled-components';
 import { IonCard, IonCardContent } from '@ionic/react';
-
-export const ButtonGroup = styled.div`
-  margin-top: 10px;
-
-  button + button {
-    margin-left: 10px;
-  }
-`;
+import { ButtonGroup } from './Button';
 
 export const Card = styled(IonCard)`
   min-height: calc(100% - 20px);

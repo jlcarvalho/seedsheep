@@ -1,13 +1,13 @@
 import React from 'react';
 import {
-  IonButton,
   IonCardHeader,
   IonCardTitle,
 } from '@ionic/react';
 
-import { ButtonGroup, Card, CardContent } from './common/Card';
+import { Card, CardContent } from './common/Card';
+import { Button, ButtonGroup } from './common/Button';
 
-export default ({ text, onClick, children }) => (
+export default ({ message, onClick, children }) => (
   <Card>
     {children}
 
@@ -17,11 +17,11 @@ export default ({ text, onClick, children }) => (
 
     <CardContent>
       <p>
-        {text}
+        {message}
       </p>
 
       <ButtonGroup>
-        <IonButton expand="block" onClick={onClick}>Seguir em frente</IonButton>
+        <Button expand="block" handleClick={onClick}>Seguir em frente</Button>
       </ButtonGroup>
     </CardContent>
   </Card>
